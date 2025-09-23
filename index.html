@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy 18th Birthday Annanya ❤</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      color: #ffffff;
+      background: #000000;
+      overflow-x: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    body.modal-open {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(45deg, #ff4081, #00e5ff, #69f0ae, #ffea00);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    header {
+      padding: 40px 20px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(255,255,255,0.8);
+    }
+
+    h2 {
+      margin-top: 10px;
+      color: #cccccc;
+    }
+
+    .countdown {
+      font-size: 2rem;
+      margin: 20px 0;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+    }
+
+    section {
+      margin: 40px auto;
+      width: 90%;
+      max-width: 1200px;
+    }
+
+    #photo-grid,
+    #video-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+    }
+
+    #photo-grid img,
+    #video-grid video {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    #photo-grid img:hover,
+    #video-grid video:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(255,255,255,0.5);
+    }
+
+    @media (max-width: 1024px) {
+      #photo-grid,
+      #video-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      #photo-grid,
+      #video-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .message {
+      padding: 30px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      backdrop-filter: blur(6px);
+      color: #fff;
+    }
+
+    .music-player {
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .music-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .music-controls button {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .music-controls button:hover { background: #ccc; }
+
+    .progress-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 15px auto;
+      height: 6px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #ff4081;
+      border-radius: 5px;
+    }
+    .time {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      color: #ddd;
+    }
+    .song-title {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    footer {
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .lightbox, .video-lightbox {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      overflow: hidden;
+      transition: opacity 0.6s ease;
+      opacity: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .lightbox.open, .video-lightbox.open { display: flex; opacity: 1; }
+
+    .lightbox img, .video-lightbox video {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: scale(0.95);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+      background: #000;
+    }
+    .lightbox img.show, .video-lightbox video.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lightbox button, .video-lightbox button {
+      position: absolute;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      user-select: none;
+      backdrop-filter: blur(2px);
+    }
+    .lightbox .close, .video-lightbox .close { top: 20px; right: 20px; }
+    .lightbox .prev, .video-lightbox .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+    .lightbox .next, .video-lightbox .next { right: 20px; top: 50%; transform: translateY(-50%); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎂 Happy 18th Birthday, Annanya! 🎂</h1>
+    <h2>Welcome to Adulthood</h2>
+    <div class="countdown" id="countdown"></div>
+  </header>
+
+  <!-- Photos -->
+  <section>
+    <h2>📸 Memories</h2>
+    <div id="photo-grid">
+      <img src="images/photo1.jpg" alt="Photo 1" loading="lazy">
+      <img src="images/photo2.jpg" alt="Photo 2" loading="lazy">
+      <img src="images/photo3.jpg" alt="Photo 3" loading="lazy">
+      <img src="images/photo4.jpg" alt="Photo 4" loading="lazy">
+      <img src="images/photo5.jpg" alt="Photo 5" loading="lazy">
+      <img src="images/photo6.jpg" alt="Photo 6" loading="lazy">
+      <img src="images/photo7.jpg" alt="Photo 7" loading="lazy">
+      <img src="images/photo8.jpg" alt="Photo 8" loading="lazy">
+      <img src="images/photo9.jpg" alt="Photo 9" loading="lazy">
+      <img src="images/photo10.jpg" alt="Photo 10" loading="lazy">
+    </div>
+  </section>
+
+  <!-- Videos -->
+  <section>
+    <h2>🎥 Videos</h2>
+    <div id="video-grid">
+      <video muted playsinline preload="metadata"><source src="videos/video1.mp4" type="video/mp4"></video>
+      <video muted playsinline preload="metadata"><source src="videos/video2.mp4" type="video/mp4"></video>
+      <video muted playsinline preload="metadata"><source src="videos/video3.mp4" type="video/mp4"></video>
+      <video muted playsinline preload="metadata"><source src="videos/video4.mp4" type="video/mp4"></video>
+      <video muted playsinline preload="metadata"><source src="videos/video5.mp4" type="video/mp4"></video>
+    </div>
+  </section>
+
+  <!-- Message -->
+  <section class="message">
+    <p>Dear LALU,</p>
+    <p>Happy 18th Birthday! 🌟 Today marks a very special milestone in your life. 
+       You are stepping into a new chapter filled with freedom, dreams, and endless opportunities. 
+       May your journey ahead be as bright as your smile, and as beautiful as your heart. 🎁✨</p>
+    <p>❤ With all my love, [SHUBHAM]</p>
+  </section>
+
+  <!-- Music Player -->
+  <section class="music-player">
+    <h2>🎶 Favourite Songs</h2>
+    <div class="song-title" id="song-title">Song 1</div>
+    <div class="music-controls">
+      <button id="prev">⏮</button>
+      <button id="play">▶</button>
+      <button id="next">⏭</button>
+    </div>
+    <div class="progress-container" id="progress-container">
+      <div class="progress" id="progress"></div>
+    </div>
+    <div class="time">
+      <span id="current-time">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+    <audio id="audio"></audio>
+  </section>
+  <!-- Self-Sung Songs -->
+<section class="music-player">
+  <h2>🎤 Self-Sung Songs by Annanya</h2>
+  <div class="song-title" id="self-song-title">Self Song 1</div>
+  <div class="music-controls">
+    <button id="self-prev">⏮</button>
+    <button id="self-play">▶</button>
+    <button id="self-next">⏭</button>
+  </div>
+  <div class="progress-container" id="self-progress-container">
+    <div class="progress" id="self-progress"></div>
+  </div>
+  <div class="time">
+    <span id="self-current-time">0:00</span>
+    <span id="self-duration">0:00</span>
+  </div>
+  <audio id="self-audio"></audio>
+</section>
+
+
+  <!-- Random Quote -->
+  <section>
+    <h2>💡 Birthday Quote</h2>
+    <p id="quote"></p>
+  </section>
+
+  <footer>
+    Made with ❤ for ANNANYA | [Shubham]
+  </footer>
+
+  <!-- Image Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="close" id="lb-close" aria-label="Close">&times;</button>
+    <button class="prev" id="lb-prev" aria-label="Previous">&#10094;</button>
+    <img id="lb-img" alt="Full Image">
+    <button class="next" id="lb-next" aria-label="Next">&#10095;</button>
+  </div>
+
+  <!-- Video Lightbox -->
+  <div class="video-lightbox" id="video-lightbox" aria-hidden="true">
+    <button class="close" id="vlb-close" aria-label="Close">&times;</button>
+    <button class="prev" id="vlb-prev" aria-label="Previous">&#10094;</button>
+    <video id="vlb-video" controls playsinline></video>
+    <button class="next" id="vlb-next" aria-label="Next">&#10095;</button>
+  </div>
+
+  <script>
+    /* Countdown */
+    const birthday = new Date("Nov 22, 2025 00:00:00").getTime();
+    const countdownEl = document.getElementById("countdown");
+    setInterval(() => {
+      const now = new Date().getTime();
+      const diff = birthday - now;
+      if (diff < 0) {
+        countdownEl.innerHTML = "🎉 It's Annanya’s 18th Birthday Today! 🎉";
+        return;
+      }
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
+      const m = Math.floor((diff % (1000*60*60))/(1000*60));
+      const s = Math.floor((diff % (1000*60))/1000);
+      countdownEl.innerHTML = `${d}d ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    /* Music Player */
+    const songs = [
+      {title: "chan kithan", src: "music/music1.mp3"},
+      {title: "main yahan hoon", src: "music/music2.mp3"},
+      {title: "ye fitoor mera", src: "music/music3.mp3"},
+      {title: "mann mera", src: "music/music4.mp3"},
+      {title: "oo rangrez", src: "music/music0.mp3"},
+    ];
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("play");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const progressContainer = document.getElementById("progress-container");
+    const progress = document.getElementById("progress");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+    const songTitle = document.getElementById("song-title");
+    let songIndex = 0;
+
+    function loadSong(song) {
+      songTitle.textContent = song.title;
+      audio.src = song.src;
+    }
+    function playSong() {
+      audio.play();
+      playBtn.textContent = "⏸";
+    }
+    function pauseSong() {
+      audio.pause();
+      playBtn.textContent = "▶";
+    }
+    function prevSong() {
+      songIndex = (songIndex - 1 + songs.length) % songs.length;
+      loadSong(songs[songIndex]);
+      playSong();
+    }
+    function nextSong() {
+      songIndex = (songIndex + 1) % songs.length;
+      loadSong(songs[songIndex]);
+      playSong();
+    }
+    function updateProgress(e) {
+      const {duration, currentTime} = e.srcElement;
+      const percent = (currentTime / duration) * 100;
+      progress.style.width = percent + "%";
+      if (!isNaN(duration)) {
+        const curMin = Math.floor(currentTime / 60);
+        const curSec = Math.floor(currentTime % 60).toString().padStart(2,"0");
+        const durMin = Math.floor(duration / 60);
+        const durSec = Math.floor(duration % 60).toString().padStart(2,"0");
+        currentTimeEl.textContent = `${curMin}:${curSec}`;
+        durationEl.textContent = `${durMin}:${durSec}`;
+      }
+    }
+    function setProgress(e) {
+      const width = this.clientWidth;
+      const clickX = e.offsetX;
+      const duration = audio.duration || 0;
+      if (duration > 0) {
+        audio.currentTime = (clickX / width) * duration;
+      }
+    }
+
+    playBtn.addEventListener("click", () => {
+      if (audio.paused) playSong();
+      else pauseSong();
+    });
+    prevBtn.addEventListener("click", prevSong);
+    nextBtn.addEventListener("click", nextSong);
+    audio.addEventListener("timeupdate", updateProgress);
+    progressContainer.addEventListener("click", setProgress);
+    audio.addEventListener("ended", nextSong);
+    loadSong(songs[songIndex]);
+    /* Self-Sung Songs Player */
+const selfSongs = [
+  {title: "Saiyaara", src: "music/self1.mp3"},
+  {title: "Kaun tujhe", src: "music/self2.mp3"},
+  {title: "Dream Song", src: "music/self3.mp3"}
+];
+
+const selfAudio = document.getElementById("self-audio");
+const selfPlayBtn = document.getElementById("self-play");
+const selfPrevBtn = document.getElementById("self-prev");
+const selfNextBtn = document.getElementById("self-next");
+const selfProgressContainer = document.getElementById("self-progress-container");
+const selfProgress = document.getElementById("self-progress");
+const selfCurrentTimeEl = document.getElementById("self-current-time");
+const selfDurationEl = document.getElementById("self-duration");
+const selfSongTitle = document.getElementById("self-song-title");
+let selfSongIndex = 0;
+
+function loadSelfSong(song) {
+  selfSongTitle.textContent = song.title;
+  selfAudio.src = song.src;
+}
+
+function playSelfSong() {
+  selfAudio.play();
+  selfPlayBtn.textContent = "⏸";
+}
+
+function pauseSelfSong() {
+  selfAudio.pause();
+  selfPlayBtn.textContent = "▶";
+}
+
+function prevSelfSong() {
+  selfSongIndex = (selfSongIndex - 1 + selfSongs.length) % selfSongs.length;
+  loadSelfSong(selfSongs[selfSongIndex]);
+  playSelfSong();
+}
+
+function nextSelfSong() {
+  selfSongIndex = (selfSongIndex + 1) % selfSongs.length;
+  loadSelfSong(selfSongs[selfSongIndex]);
+  playSelfSong();
+}
+
+function updateSelfProgress(e) {
+  const {duration, currentTime} = e.srcElement;
+  const percent = (currentTime / duration) * 100;
+  selfProgress.style.width = percent + "%";
+  if (!isNaN(duration)) {
+    const curMin = Math.floor(currentTime / 60);
+    const curSec = Math.floor(currentTime % 60).toString().padStart(2,"0");
+    const durMin = Math.floor(duration / 60);
+    const durSec = Math.floor(duration % 60).toString().padStart(2,"0");
+    selfCurrentTimeEl.textContent = `${curMin}:${curSec}`;
+    selfDurationEl.textContent = `${durMin}:${durSec}`;
+  }
+}
+
+function setSelfProgress(e) {
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = selfAudio.duration || 0;
+  if (duration > 0) selfAudio.currentTime = (clickX / width) * duration;
+}
+
+selfPlayBtn.addEventListener("click", () => {
+  if (selfAudio.paused) playSelfSong();
+  else pauseSelfSong();
+});
+selfPrevBtn.addEventListener("click", prevSelfSong);
+selfNextBtn.addEventListener("click", nextSelfSong);
+selfAudio.addEventListener("timeupdate", updateSelfProgress);
+selfProgressContainer.addEventListener("click", setSelfProgress);
+selfAudio.addEventListener("ended", nextSelfSong);
+
+loadSelfSong(selfSongs[selfSongIndex]);
+
+
+    /* Random Quotes */
+    const quotes = [
+      "Count your life by smiles, not tears. Count your age by friends, not years.",
+      "The more you praise and celebrate your life, the more there is in life to celebrate.",
+      "Birthdays are the universe’s way of telling us to eat more cake.",
+      "You are not older, you are just wiser and more fabulous.",
+      "Life should not only be lived, it should be celebrated!"
+    ];
+    document.getElementById("quote").textContent = quotes[Math.floor(Math.random()*quotes.length)];
+
+    /* -------- IMAGE LIGHTBOX SLIDER -------- */
+    const images = document.querySelectorAll("#photo-grid img");
+    const lb = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lb-img");
+    const lbClose = document.getElementById("lb-close");
+    const lbNext = document.getElementById("lb-next");
+    const lbPrev = document.getElementById("lb-prev");
+    let imgIndex = 0;
+
+    function openLightbox(index) {
+      imgIndex = index;
+      lbImg.src = images[imgIndex].src;
+      lb.classList.add("open");
+      setTimeout(() => lbImg.classList.add("show"), 50);
+      document.body.classList.add("modal-open");
+    }
+
+    function closeLightbox() {
+      lbImg.classList.remove("show");
+      setTimeout(() => lb.classList.remove("open"), 300);
+      document.body.classList.remove("modal-open");
+    }
+
+    function nextImage() {
+      imgIndex = (imgIndex + 1) % images.length;
+      lbImg.classList.remove("show");
+      setTimeout(() => lbImg.src = images[imgIndex].src, 200);
+      setTimeout(() => lbImg.classList.add("show"), 250);
+    }
+
+    function prevImage() {
+      imgIndex = (imgIndex - 1 + images.length) % images.length;
+      lbImg.classList.remove("show");
+      setTimeout(() => lbImg.src = images[imgIndex].src, 200);
+      setTimeout(() => lbImg.classList.add("show"), 250);
+    }
+
+    images.forEach((img, i) => img.addEventListener("click", () => openLightbox(i)));
+    lbClose.addEventListener("click", closeLightbox);
+    lbNext.addEventListener("click", nextImage);
+    lbPrev.addEventListener("click", prevImage);
+    lb.addEventListener("click", (e) => { if(e.target === lb) closeLightbox(); });
+
+    /* -------- VIDEO LIGHTBOX SLIDER -------- */
+    const videos = document.querySelectorAll("#video-grid video");
+    const vlb = document.getElementById("video-lightbox");
+    const vlbVideo = document.getElementById("vlb-video");
+    const vlbClose = document.getElementById("vlb-close");
+    const vlbNext = document.getElementById("vlb-next");
+    const vlbPrev = document.getElementById("vlb-prev");
+    let vidIndex = 0;
+
+    function openVideoLightbox(index) {
+      vidIndex = index;
+      vlbVideo.src = videos[vidIndex].querySelector("source").src;
+      vlb.classList.add("open");
+      setTimeout(() => vlbVideo.classList.add("show"), 50);
+      vlbVideo.play();
+      document.body.classList.add("modal-open");
+    }
+
+    function closeVideoLightbox() {
+      vlbVideo.pause();
+      vlbVideo.currentTime = 0;
+      vlbVideo.classList.remove("show");
+      setTimeout(() => vlb.classList.remove("open"), 300);
+      document.body.classList.remove("modal-open");
+    }
+
+    function nextVideo() {
+      vidIndex = (vidIndex + 1) % videos.length;
+      vlbVideo.classList.remove("show");
+      setTimeout(() => vlbVideo.src = videos[vidIndex].querySelector("source").src, 200);
+      setTimeout(() => { vlbVideo.classList.add("show"); vlbVideo.play(); }, 250);
+    }
+
+    function prevVideo() {
+      vidIndex = (vidIndex - 1 + videos.length) % videos.length;
+      vlbVideo.classList.remove("show");
+      setTimeout(() => vlbVideo.src = videos[vidIndex].querySelector("source").src, 200);
+      setTimeout(() => { vlbVideo.classList.add("show"); vlbVideo.play(); }, 250);
+    }
+
+    videos.forEach((vid, i) => vid.addEventListener("click", () => openVideoLightbox(i)));
+    vlbClose.addEventListener("click", closeVideoLightbox);
+    vlbNext.addEventListener("click", nextVideo);
+    vlbPrev.addEventListener("click", prevVideo);
+    vlb.addEventListener("click", (e) => { if(e.target === vlb) closeVideoLightbox(); });
+  </script>
+</body>
+</html>
